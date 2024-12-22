@@ -1,0 +1,16 @@
+{
+  "configurations": [
+    {
+      "name": "Deploy Cloud Function",
+      "type": "cloudcode.cloudfunctions",
+      "request": "launch",
+      "functionName": "check-stock-index-price",
+      "region": "us-central1",
+      "gen": "GEN_2",
+      "revision": "check-stock-index-price-00002-pir",
+      "entryPoint": "check-stock-price",
+      "runtime": "nodejs20",
+      "testInput": ""
+    }
+  ]
+}
