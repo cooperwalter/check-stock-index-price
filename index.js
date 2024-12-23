@@ -1,5 +1,7 @@
 const functions = require('@google-cloud/functions-framework');
 
+const SP500_STICKER = "FLX";
+
 /**
  * Checks if a stock symbol exists in the US exchange.
  * @param {string} stockSymbol - The stock symbol to check.
@@ -35,7 +37,7 @@ async function getStockPrice(stockSymbol) {
 }
 
 functions.http('check-stock-price', async (req, res) => {
-  const stockSymbol = req.query.symbol || "GOOG";
+  const stockSymbol = req.query.symbol || SP500_STICKER;
   const price = await getStockPrice(stockSymbol);
   res.send(`The price of ${stockSymbol} is ${price}`);
 });
@@ -55,16 +57,16 @@ if (process.env.ENVIRONMENT === 'dev') {
    * @param {Object} req - The request object.
    * @param {Object} res - The response object.
    */
-  app.get('/stock/:symbol', async (req, res) => {
+  app.get('/stock/:symbol?', async (req, res) => {
     if (process.env.FINNHUB_API_KEY === "INSERT_YOUR_API_KEY_HERE") {
       res.status(500).send("Please set the FINNHUB_API_KEY environment variable");
       return;
     }
+    const stockSymbol = req.params.symbol || SP500_STICKER;
     if (!req.params.symbol) {
-      res.status(400).send("Please provide a stock symbol");
-      return;
+      console.warn("No symbol provided, defaulting to SP500 ticker: " + SP500_STICKER);
     }
-    const symbol = req.params.symbol.toUpperCase();
+    const symbol = stockSymbol.toUpperCase();
     try {
       if (!await symbolExists(symbol)) {
         res.status(404).send("Stock symbol not found");
