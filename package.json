@@ -1,5 +1,11 @@
 {
+  "scripts": {
+    "dev": "nodemon --exec node --env-file=.env.debug --env-file=.env index.js"
+  },
   "dependencies": {
     "@google-cloud/functions-framework": "^3.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
   }
 }

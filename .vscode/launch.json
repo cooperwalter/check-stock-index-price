@@ -9,7 +9,7 @@
       "gen": "GEN_2",
       "revision": "check-stock-index-price-00002-pir",
       "entryPoint": "check-stock-price",
-      "runtime": "nodejs20",
+      "runtime": "nodejs22",
       "testInput": ""
     }
   ]
