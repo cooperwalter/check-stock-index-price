@@ -7,7 +7,7 @@
       "functionName": "check-stock-index-price",
       "region": "us-central1",
       "gen": "GEN_2",
-      "revision": "check-stock-index-price-00002-pir",
+      "revision": "check-stock-index-price-00004-foj",
       "entryPoint": "check-stock-price",
       "runtime": "nodejs22",
       "testInput": ""

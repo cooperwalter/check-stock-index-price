@@ -1,4 +1,4 @@
-const functions = require('@google-cloud/functions-framework');
+const functions = require("@google-cloud/functions-framework");
 
 const SP500_STICKER = "FLX";
 
@@ -10,8 +10,10 @@ const SP500_STICKER = "FLX";
  */
 async function symbolExists(stockSymbol) {
   const apiKey = process.env.FINNHUB_API_KEY;
+  console.log("process.env", process.env);
   const endpoint = `https://finnhub.io/api/v1/stock/symbol?exchange=US&token=${apiKey}`;
   const response = await fetch(endpoint);
+  console.log("symbol exists response", response);
   if (response.status !== 200) {
     throw new Error("Failed to fetch stock symbols");
   }
@@ -27,7 +29,11 @@ async function symbolExists(stockSymbol) {
  */
 async function getStockPrice(stockSymbol) {
   const apiKey = process.env.FINNHUB_API_KEY;
-  const endpoint = "https://finnhub.io/api/v1/quote?symbol=" + stockSymbol + "&token=" + apiKey;
+  const endpoint =
+    "https://finnhub.io/api/v1/quote?symbol=" +
+    stockSymbol +
+    "&token=" +
+    apiKey;
   const response = await fetch(endpoint);
   if (response.status !== 200) {
     throw new Error("Failed to fetch stock price");
@@ -36,20 +42,41 @@ async function getStockPrice(stockSymbol) {
   return data.pc; // price at previous close
 }
 
-functions.http('check-stock-price', async (req, res) => {
+functions.http("check-stock-price", async (req, res) => {
+  if (process.env.FINNHUB_API_KEY === "INSERT_YOUR_API_KEY_HERE") {
+    res.status(500).send("Please set the FINNHUB_API_KEY environment variable");
+    return;
+  }
   const stockSymbol = req.query.symbol || SP500_STICKER;
-  const price = await getStockPrice(stockSymbol);
-  res.send(`The price of ${stockSymbol} is ${price}`);
+  if (!req.query.symbol) {
+    console.warn(
+      "No symbol provided, defaulting to SP500 ticker: " + SP500_STICKER
+    );
+  }
+  const symbol = stockSymbol.toUpperCase();
+  try {
+    if (!(await symbolExists(symbol))) {
+      console.error("Stock symbol not found");
+      res.status(404).send("Stock symbol not found");
+      return;
+    }
+    const price = await getStockPrice(symbol);
+    console.log("Found price: " + price);
+    res.send(`The price of ${symbol} is ${price}`);
+  } catch (error) {
+    console.error("Failed with error: " + error.message);
+    res.status(500).send(error.message);
+  }
 });
 
 // Create an express server for local testing
 
-if (process.env.ENVIRONMENT === 'dev') {
-  const express = require('express');
+if (process.env.ENVIRONMENT === "dev") {
+  const express = require("express");
   const app = express();
 
-  app.get('/', (req, res) => {
-    res.send('Hello World');
+  app.get("/", (req, res) => {
+    res.send("Hello World");
   });
 
   /**
@@ -57,24 +84,30 @@ if (process.env.ENVIRONMENT === 'dev') {
    * @param {Object} req - The request object.
    * @param {Object} res - The response object.
    */
-  app.get('/stock/:symbol?', async (req, res) => {
+  app.get("/stock", async (req, res) => {
     if (process.env.FINNHUB_API_KEY === "INSERT_YOUR_API_KEY_HERE") {
-      res.status(500).send("Please set the FINNHUB_API_KEY environment variable");
+      res
+        .status(500)
+        .send("Please set the FINNHUB_API_KEY environment variable");
       return;
     }
-    const stockSymbol = req.params.symbol || SP500_STICKER;
-    if (!req.params.symbol) {
-      console.warn("No symbol provided, defaulting to SP500 ticker: " + SP500_STICKER);
+    const stockSymbol = req.query.symbol || SP500_STICKER;
+    if (!req.query.symbol) {
+      console.warn(
+        "No symbol provided, defaulting to SP500 ticker: " + SP500_STICKER
+      );
     }
     const symbol = stockSymbol.toUpperCase();
     try {
-      if (!await symbolExists(symbol)) {
+      if (!(await symbolExists(symbol))) {
         res.status(404).send("Stock symbol not found");
         return;
       }
       const price = await getStockPrice(symbol);
+      console.log("Found price: " + price);
       res.send(`The price of ${symbol} is ${price}`);
     } catch (error) {
+      console.error("Failed with error: " + error.message);
       res.status(500).send(error.message);
     }
   });
