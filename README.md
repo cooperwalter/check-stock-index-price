@@ -8,7 +8,8 @@ Stack:
 
 - [Google Cloud Run Functions](https://cloud.google.com/functions?hl=en) to execute the program as a serverless function
 - [Google Firestore](https://cloud.google.com/firestore) to store the stock prices
-- [Cloud Scheduler](https://cloud.google.com/scheduler) to schedule the function to run at a regular interval
+- [Cloud Scheduler](https://cloud.google.com/scheduler) to schedule the Workflow to run every night.
+- [Cloud Workflows](https://cloud.google.com/workflows) to be called by the Cloud Scheduler job. It calls the Cloud Run Functions endpoint with an http request.
 - [Finnhub API](https://finnhub.io/docs/api/introduction) to get the stock prices
 - [Node.js](https://nodejs.org/en) to run the program
 - [IFTTT](https://ifttt.com) to send a notification when the price drops
@@ -73,3 +74,16 @@ You must create a `.env` file in the root of the project with the following vari
 - `FIRESTORE_DATABASE` - The name of the Firestore database
 - `FIRESTORE_COLLECTION` - The name of the Firestore collection
 - `FIREBASE_SERVICE_ACCOUNT_KEY_PATH` - (Dev Only) The path to the Firebase service account key file (required for local development because the Cloud Run Function will already have access to the Firestore database because it's in the same project)
+
+## Google Cloud Workflows
+
+The Cloud Workflows are used to trigger the Cloud Run Functions from the Cloud Scheduler job.
+
+The workflow can perform an http.get request to the Cloud Run Functions endpoint.
+
+It needs to be attached to a Service Account with the "Cloud Run Invoker" role and to pass a bearer token in the header.
+
+See [this documentation](https://cloud.google.com/functions/docs/securing/authenticating#id-tokens) for more information on creating a bearer token.
+
+See the example workflow.yaml file in the root of the project.
+
