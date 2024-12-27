@@ -3,6 +3,7 @@
     "dev": "nodemon --exec node --env-file=.env.debug --env-file=.env index.js"
   },
   "dependencies": {
+    "@google-cloud/firestore": "^7.11.0",
     "@google-cloud/functions-framework": "^3.0.0"
   },
   "devDependencies": {
