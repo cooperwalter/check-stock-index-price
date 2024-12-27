@@ -46,6 +46,13 @@ You must also define these variables in a `.env` file in the root of the project
 
 Honestly, copying and pasting the files into the Google Cloud Run Functions editor is the easiest way to deploy. Only the editor supports testing the function... so yeah.
 
+Files that need to be deployed:
+
+- `index.js` - The main entry point for the function
+- `Firestore.js` - The Firestore service
+- `Notifier.js` - The notifier service
+- `package.json` - The package.json file
+
 ## Google Firestore Storage
 
 Google Firestore is a NoSQL database that uses collections and documents to store data.
@@ -61,4 +68,4 @@ You must create a `.env` file in the root of the project with the following vari
 - `FIRESTORE_PROJECT_ID` - The ID of the Firestore project
 - `FIRESTORE_DATABASE` - The name of the Firestore database
 - `FIRESTORE_COLLECTION` - The name of the Firestore collection
-- `FIREBASE_SERVICE_ACCOUNT_KEY_PATH` - The path to the Firebase service account key file
+- `FIREBASE_SERVICE_ACCOUNT_KEY_PATH` - (Dev Only) The path to the Firebase service account key file (required for local development because the Cloud Run Function will already have access to the Firestore database)
