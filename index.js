@@ -1,6 +1,6 @@
 const functions = require("@google-cloud/functions-framework");
 const FirestoreService = require("./firestore");
-const Notifier = require("./notifier");
+const Notifier = require("./Notifier");
 const SP500_STICKER = "FLX";
 
 /**
