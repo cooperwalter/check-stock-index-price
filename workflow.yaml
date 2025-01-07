@@ -11,5 +11,6 @@ main:
         call: http.get
         args:
             url: 'https://us-central1-stock-index-tracker.cloudfunctions.net/check-stock-index-price'
-            headers:
-                Authorization: "Bearer {your-bearer-token}"
+            auth:
+                type: OIDC
+                audience: 'https://us-central1-stock-index-tracker.cloudfunctions.net/check-stock-index-price'

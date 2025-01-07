@@ -54,6 +54,8 @@ Files that need to be deployed:
 - `Notifier.js` - The notifier service
 - `package.json` - The package.json file
 
+You should set memory to 256 MiB under the Runtime settings.
+
 ## Testing Google Cloud Run Deploy
 
 Important NOTE: If you are using the test feature when editing the function, it seems it won't pick up on new env variables. You must save first then test.
@@ -81,9 +83,10 @@ The Cloud Workflows are used to trigger the Cloud Run Functions from the Cloud S
 
 The workflow can perform an http.get request to the Cloud Run Functions endpoint.
 
-It needs to be attached to a Service Account with the "Cloud Run Invoker" role and to pass a bearer token in the header.
+It needs to be attached to a Service Account with the "Cloud Run Invoker" role.
 
-See [this documentation](https://cloud.google.com/functions/docs/securing/authenticating#id-tokens) for more information on creating a bearer token.
+When making the request, it uses OIDC authentication. See [this documentation](https://cloud.google.com/workflows/docs/calling-run-functions#:~:text=Add%20authentication%20information%20to%20your%20workflow,-Note%3A%20This%20authentication&text=When%20making%20requests%20to%20Cloud,Run%2C%20use%20OIDC%20to%20authenticate.&text=The%20audience%20parameter%20can%20be,to%20your%20service's%20root%20URL.) for configuring OIDC authentication.
 
-See the example workflow.yaml file in the root of the project.
+NOTE: The "audience" parameter should be set to the root URL of the Cloud Run Functions endpoint.
 
+See the workflow.yaml file in the root of the project.
