@@ -1,7 +1,7 @@
 const functions = require("@google-cloud/functions-framework");
 const FirestoreService = require("./Firestore");
 const Notifier = require("./Notifier");
-const SP500_STICKER = "FLX";
+const SP500_STICKER = "VOO";
 
 /**
  * Validates that all required environment variables are set.
